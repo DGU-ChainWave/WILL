@@ -146,7 +146,7 @@ export const Writing6 = () => {
         </div>
         <div className={styles.will_textarea}>
           <div>
-            저는 {userState.username}입니다. 오늘은 {year}년 {month}월 {date}일입니다. 나의 취지는 이 세상을 떠남으로써
+            저는 {userState.username}입니다. 오늘은 {year}년 {month}월 {date}일입니다. 저의 취지는 이 세상을 떠남으로써
             내 사랑과 감사를 표현하고, 내 가족과 사랑하는 모든 사람들에게 힘과 위로를 전하는 것입니다.
           </div>
           <br />
