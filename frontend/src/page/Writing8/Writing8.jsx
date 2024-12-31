@@ -6,7 +6,6 @@ import Will from 'truffle_abis/Will.json';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { WillState } from 'stores/will-store';
 import { UserState } from 'stores/login-store';
-import { create as ipfsHttpClient } from 'ipfs-http-client';
 import instance from 'api/axios';
 import CryptoJS from 'crypto-js';
 // const ganache = require('ganache');
@@ -28,49 +27,35 @@ export const Writing8 = () => {
   // const [web3, setWeb3] = useState(null);
   const [willState, setWillState] = useRecoilState(WillState);
   const userState = useRecoilValue(UserState);
-  const [ipfs, setIpfs] = useState(null);
+  // const [ipfs, setIpfs] = useState(null);
   const [ipfsHash, setIpfsHash] = useState(null);
   const [accounts, setAccounts] = useState(null);
 
   const token = useMemo(() => localStorage.getItem('token'), []);
 
-  const projectId = process.env.REACT_APP_PROJECT_ID;
-  const projectSecretKey = process.env.REACT_APP_PROJECT_KEY;
-  const auth = 'Basic ' + btoa(projectId + ':' + projectSecretKey);
-
-  const ipfsUpload = async () => {
-    const ipfsClient = await ipfsHttpClient({
-      url: 'https://ipfs.infura.io:5001/api/v0',
-      headers: {
-        authorization: auth,
-      },
-    });
-    setIpfs(ipfsClient);
-  };
-
-  const handleSubmitIPFS = async () => {
-    if (willState.audio) {
-      const added = await ipfs.add(willState.audio);
-      console.log(added);
-      setIpfsHash(added.path);
-      setWillState(prevState => ({
-        ...prevState,
-        ipfsHash: added.path,
-      }));
-    } else {
+  const uploadToPinata = async () => {
+    if (!willState.audio) {
       alert('No audio data available to upload to IPFS.');
+      return;
     }
+
+    const {data} = await instance.post(
+      '/api/ipfs/upload',
+      {
+        audio: willState.audio,
+        nowDate: nowDate,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    setIpfsHash(data.ipfsHash);
+    setWillState(prevState => ({
+      ...prevState,
+      ipfsHash: data.ipfsHash,
+    }));
   };
-
-  /* const loadProvider = async () => {
-    if (window.ethereum) {
-      const provider = window.ethereum;
-      provider.enable();
-
-      const web3Instance = new Web3(provider);
-      setWeb3(web3Instance);
-    }
-  }; */
 
   const handleSaveToBlockchain = async () => {
     try {
@@ -142,30 +127,25 @@ export const Writing8 = () => {
     }
   };
 
-  useEffect(() => {
-    // getGanacheAccount();
-    setTransactionStatus(null);
-    ipfsUpload();
-  }, []);
+   useEffect(() => {
+     setTransactionStatus(null);
+     uploadToPinata();
+   }, []);
 
-  useEffect(() => {
-    if (ipfs) {
-      handleSubmitIPFS();
-    }
-  }, [ipfs]);
+   useEffect(() => {
+     if (ipfsHash) {
+        console.log('ipfsHash:', ipfsHash);
+       handleSaveToBlockchain();
+     }
+   }, [ipfsHash]);
 
-  useEffect(() => {
-    if (ipfsHash) {
-      handleSaveToBlockchain();
-    }
-  }, [ipfsHash]);
-
-  useEffect(() => {
-    if (transactionStatus !== null) {
-      postTxHash();
-      navigate('/writing9');
-    }
-  }, [transactionStatus]);
+   useEffect(() => {
+     if (transactionStatus !== null) {
+      console.log('transactionStatus:', transactionStatus);
+       postTxHash();
+       navigate('/writing9');
+     }
+   }, [transactionStatus]);
 
   return (
     <div className={styles.container}>

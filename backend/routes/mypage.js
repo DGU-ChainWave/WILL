@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const passport = require('passport');
 const User = require('../models/User');
 const athenticates = require('../middlewares/authenticates');
 const authenticateToken = athenticates.authenticateToken;

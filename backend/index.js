@@ -12,6 +12,7 @@ const port = process.env.PORT || 5005;
 // const adminRoute = require("./admin/admin");
 const authRoute = require('./routes/auth');
 const mypageRoute = require('./routes/mypage');
+const ipfsRoute = require('./routes/ipfs');
 
 dotenv.config();
 app.use(bodyParser.json());
@@ -38,6 +39,7 @@ mongoose
 // app.use("/admin", adminRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/mypage', mypageRoute);
+app.use('/api/ipfs', ipfsRoute);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
