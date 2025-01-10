@@ -5,17 +5,13 @@ import { PageNavigation } from 'components';
 import { useRecoilState } from 'recoil';
 import { WillState } from 'stores/will-store';
 
-export const Will = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Will = ({ willData, onQClick, onNext }) => {
   const [comment, setComment] = useState('');
 
   const handleCommentChange = e => {
     const updatedComment = e.target.value;
     setComment(updatedComment);
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      plus: updatedComment,
-    }));
+    onQClick('plus', undefined, updatedComment);
   };
 
   return (
@@ -28,12 +24,12 @@ export const Will = () => {
           <textarea
             className={styles.hope_container}
             placeholder="텍스트를 입력해주세요"
-            value={comment || willState.plus}
+            value={comment || willData.plus}
             onChange={handleCommentChange}
           />
         </div>
         <div style={{ marginTop: '140px', marginBottom: '40px' }}>
-          <PageNavigation nextPath="/writing6" />
+          <PageNavigation onNext={onNext} />
         </div>
       </div>
     </div>

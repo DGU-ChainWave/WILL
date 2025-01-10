@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import styles from './Q1.module.scss';
-import { useRecoilState } from 'recoil';
-import { WillState } from 'stores/will-store';
 
 const funeralOptions = [
   {
@@ -31,33 +29,20 @@ const funeralOptions = [
   },
 ];
 
-export const Q1 = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Q1 = ({ willData, onQClick }) => {
   const [clickedOption, setClickedOption] = useState(''); // 클릭된 옵션 상태 추가
   const [comment, setComment] = useState(''); // 희망사항 상태 추가
 
   const handleOptionClick = option => {
     setClickedOption(option); // 클릭된 옵션 업데이트
     // WillState의 funeral 업데이트
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      funeral: {
-        ...prevWillState.funeral,
-        selected: option,
-      },
-    }));
+    onQClick('funeral', 'selected', option);
   };
 
   const handleCommentChange = e => {
     const updatedComment = e.target.value;
-    setComment(updatedComment);   
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      funeral: {
-        ...prevWillState.funeral,
-        note: updatedComment, // 희망사항 업데이트
-      },
-    }));
+    setComment(updatedComment);
+    onQClick('funeral', 'note', updatedComment);
   };
 
   return (
@@ -70,7 +55,7 @@ export const Q1 = () => {
             <button
               key={option.id}
               className={`${styles.selectBox} ${
-                (clickedOption === option.title || willState.funeral.selected === option.title) && styles.clicked
+                (clickedOption === option.title || willData.funeral.selected === option.title) && styles.clicked
               }`}
               onClick={() => handleOptionClick(option.title)}>
               <div className={styles.title_text}>{option.title}</div>
@@ -78,11 +63,11 @@ export const Q1 = () => {
             </button>
           ))}
         </div>
-        
+
         <textarea
           className={styles.hope_container}
           placeholder="희망사항을 남겨주세요"
-          value={comment || willState.funeral.note}
+          value={comment || willData.funeral.note}
           onChange={handleCommentChange}
         />
       </div>

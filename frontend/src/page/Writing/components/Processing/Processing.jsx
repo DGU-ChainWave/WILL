@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Web3 from 'web3';
 import Will from 'truffle_abis/Will.json';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { WillState } from 'stores/will-store';
+import { willData } from 'stores/will-store';
 import { UserState } from 'stores/login-store';
 import instance from 'api/axios';
 import CryptoJS from 'crypto-js';
@@ -20,12 +20,9 @@ const minute = today.getMinutes();
 const second = today.getSeconds();
 const nowDate = `${year}-${month}-${date} ${hour}:${minute}:${second}`;
 
-export const Processing = () => {
-  const navigate = useNavigate();
-
+export const Processing = ({ willData, onQClick, onNext }) => {
   const [transactionStatus, setTransactionStatus] = useState(null);
   // const [web3, setWeb3] = useState(null);
-  const [willState, setWillState] = useRecoilState(WillState);
   const userState = useRecoilValue(UserState);
   // const [ipfs, setIpfs] = useState(null);
   const [ipfsHash, setIpfsHash] = useState(null);
@@ -34,7 +31,7 @@ export const Processing = () => {
   const token = useMemo(() => localStorage.getItem('token'), []);
 
   const uploadToPinata = async () => {
-    if (!willState.audio) {
+    if (!willData.audio) {
       alert('No audio data available to upload to IPFS.');
       return;
     }
@@ -42,7 +39,7 @@ export const Processing = () => {
     const { data } = await instance.post(
       '/api/ipfs/upload',
       {
-        audio: willState.audio,
+        audio: willData.audio,
         nowDate: nowDate,
       },
       {
@@ -51,10 +48,7 @@ export const Processing = () => {
     );
 
     setIpfsHash(data.ipfsHash);
-    setWillState(prevState => ({
-      ...prevState,
-      ipfsHash: data.ipfsHash,
-    }));
+    onQClick('ipfsHash', undefined, data.ipfsHash);
   };
 
   const handleSaveToBlockchain = async () => {
@@ -69,13 +63,13 @@ export const Processing = () => {
       // 스마트 컨트랙트 인스턴스 생성
       const contractInstance = new web3.eth.Contract(contractAbi, contractAddress);
 
-      // Recoil로부터 데이터 가져오기 (예: willState.openDate)
+      // Recoil로부터 데이터 가져오기 (예: willData.openDate)
       const email = userState.email;
       const username = userState.username;
-      const will = willState.will;
-      const audioHash = willState.ipfsHash;
+      const will = willData.will;
+      const audioHash = willData.ipfsHash;
 
-      const combinedData = `${userState.email}${userState.username}${willState.will}${ipfsHash}${nowDate}`;
+      const combinedData = `${userState.email}${userState.username}${willData.will}${ipfsHash}${nowDate}`;
       const sha256Hash = CryptoJS.SHA256(combinedData).toString();
 
       console.log(sha256Hash);
@@ -143,7 +137,7 @@ export const Processing = () => {
     if (transactionStatus !== null) {
       console.log('transactionStatus:', transactionStatus);
       postTxHash();
-      navigate('/writing9');
+      onNext();
     }
   }, [transactionStatus]);
 

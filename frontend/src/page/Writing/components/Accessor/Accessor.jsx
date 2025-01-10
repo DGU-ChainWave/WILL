@@ -9,18 +9,12 @@ import moment from 'moment';
 import { ProgressBar } from '../ProgressBar';
 import { PageNavigation } from 'components';
 import { ViewerGroup } from './component/Viewer';
-import { useRecoilState } from 'recoil';
-import { WillState } from 'stores/will-store';
 
-export const Accessor = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
-  const selectedDate = moment(willState.openDate).toDate('yyyy년 MM월 dd일');
+export const Accessor = ({ willData, onQClick, onNext }) => {
+  const selectedDate = moment(willData.openDate).toDate('yyyy년 MM월 dd일');
 
   const handleDateChange = date => {
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      openDate: date,
-    }));
+    onQClick('openDate', undefined, date);
   };
 
   return (
@@ -43,7 +37,7 @@ export const Accessor = () => {
           />
         </div>
         <img src={Image} alt="nextPage" className={styles.imgStyle} />
-        <PageNavigation nextPath="/writing8" />
+        <PageNavigation onNext={onNext} />
       </div>
     </div>
   );

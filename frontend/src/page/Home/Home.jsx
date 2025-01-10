@@ -34,7 +34,7 @@ export const Home = () => {
             }}>
             당신의 유언장을 남겨보세요.
           </p>
-          <Link to="./Writing1">
+          <Link to="./writing">
             <button onClick={handleClick} className={styles.button} style={{ marginTop: '405px' }}>
               <p className={styles.text} style={{ fontSize: '28px', fontWeight: '700', color: '#000' }}>
                 유언장 작성하기

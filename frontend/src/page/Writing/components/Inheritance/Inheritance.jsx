@@ -3,9 +3,7 @@ import styles from './Inheritance.module.css';
 
 import { ProgressBar } from '../ProgressBar';
 import { PageNavigation } from 'components';
-import { useRecoilState } from 'recoil';
 import { Option } from 'components';
-import { WillState } from 'stores/will-store';
 
 const inheritanceOptions = [
   {
@@ -18,33 +16,21 @@ const inheritanceOptions = [
   },
 ];
 
-export const Inheritance = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Inheritance = ({ willData, onQClick, onNext }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [comment, setComment] = useState('');
 
   const handleOptionClick = option => {
     setSelectedOption(option);
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      inheritance: {
-        ...prevWillState.inheritance,
-        selected: option,
-      },
-    }));
+    onQClick('inheritance', 'selected', option);
   };
 
   const handleCommentChange = e => {
     const updatedComment = e.target.value;
     setComment(updatedComment);
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      inheritance: {
-        ...prevWillState.inheritance,
-        note: updatedComment,
-      },
-    }));
+    onQClick('inheritance', 'note', updatedComment);
   };
+  
   return (
     <div className={styles.root}>
       <ProgressBar step={3} />
@@ -63,13 +49,13 @@ export const Inheritance = () => {
             <Option
               key={option.id}
               onClick={() => handleOptionClick(option.title)}
-              active={selectedOption === option.title || willState.inheritance.selected === option.title}>
+              active={selectedOption === option.title || willData.inheritance.selected === option.title}>
               {option.title}
             </Option>
           ))}
         </div>
 
-        {(selectedOption || willState.inheritance.selected) === '유언상속' && (
+        {(selectedOption || willData.inheritance.selected) === '유언상속' && (
           <div className={styles.info_container}>
             <p className={styles.text} style={{ fontSize: '18px', color: '#898394' }}>
               상속관계 유언 예시
@@ -85,14 +71,14 @@ export const Inheritance = () => {
             <textarea
               className={styles.hope_container}
               placeholder="텍스트를 입력해주세요"
-              value={comment || willState.inheritance.note}
+              value={comment || willData.inheritance.note}
               onChange={handleCommentChange}
             />
           </div>
         )}
 
         <div style={{ marginTop: '100px', marginBottom: '60px' }}>
-          <PageNavigation nextPath="/writing5" />
+          <PageNavigation onNext={onNext} />
         </div>
       </div>
     </div>

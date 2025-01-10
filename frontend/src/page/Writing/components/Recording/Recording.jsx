@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import styles from './Recording.module.scss';
 import { PageNavigation } from 'components';
 import { ProgressBar } from '../ProgressBar';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { WillState } from 'stores/will-store';
+import { useRecoilValue } from 'recoil';
 import { UserState } from 'stores/login-store';
 
 const mimeType = 'audio/mp3';
@@ -14,8 +13,7 @@ const year = today.getFullYear();
 const month = today.getMonth() + 1;
 const date = today.getDate();
 
-export const Recording = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Recording = ({ willData, onQClick, onNext }) => {
   const userState = useRecoilValue(UserState);
   const [permission, setPermission] = useState(false);
   const mediaRecorder = useRef(null);
@@ -68,31 +66,25 @@ export const Recording = () => {
       //creates a playable URL from the blob file.
       const audioUrl = URL.createObjectURL(audioBlob);
       setAudio(audioUrl);
-      setWillState(prevState => ({
-        ...prevState,
-        audio: audioUrl,
-      }));
+      onQClick('audio', undefined, audioUrl);
       setAudioChunks([]);
     };
   };
 
   const updateWillNote = useCallback(() => {
     // 합칠 요소들을 줄바꿈 문자()으로 연결하여 will 변수에 할당
-    const willNote = `${willState.funeral.selected}
-  ${willState.funeral.note}
-  ${willState.grave.selected}
-  ${willState.grave.note}
-  ${willState.lifeSupport.selected}
-  ${willState.organDonation.selected}
-  ${willState.inheritance.selected}
-  ${willState.inheritance.note}
-  ${willState.plus}`;
+    const willNote = `${willData.funeral.selected}
+  ${willData.funeral.note}
+  ${willData.grave.selected}
+  ${willData.grave.note}
+  ${willData.lifeSupport.selected}
+  ${willData.organDonation.selected}
+  ${willData.inheritance.selected}
+  ${willData.inheritance.note}
+  ${willData.plus}`;
 
-    setWillState(prevState => ({
-      ...prevState,
-      will: willNote,
-    }));
-  }, [willState]);
+    onQClick('will', undefined, willNote);
+  }, [willData]);
 
   useEffect(() => {
     getMicrophonePermission();
@@ -130,9 +122,9 @@ export const Recording = () => {
               녹음 시작하기
             </div>
           )}
-          {(audio || willState.audio) && (
+          {(audio || willData.audio) && (
             <>
-              <audio className={styles.audio} src={audio || willState.audio} type="audio/mp3" controls></audio>
+              <audio className={styles.audio} src={audio || willData.audio} type="audio/mp3" controls></audio>
               {/* <a download href={audio}>
                 Download Recording
               </a> */}
@@ -151,28 +143,28 @@ export const Recording = () => {
             내 사랑과 감사를 표현하고, 내 가족과 사랑하는 모든 사람들에게 힘과 위로를 전하는 것입니다.
           </div>
           <br />
-          <div>{willState.plus}</div>
+          <div>{willData.plus}</div>
           <br />
-          <div>저는 {willState.funeral.selected}을 원합니다.</div>
-          <div>{willState.funeral.note}</div>
+          <div>저는 {willData.funeral.selected}을 원합니다.</div>
+          <div>{willData.funeral.note}</div>
           <br />
-          <div>저는 {willState.grave.selected}을 원합니다.</div>
-          <div>{willState.grave.note}</div>
+          <div>저는 {willData.grave.selected}을 원합니다.</div>
+          <div>{willData.grave.note}</div>
           <br />
-          <div>저는 {willState.lifeSupport.selected}</div>
+          <div>저는 {willData.lifeSupport.selected}</div>
           <br />
-          <div>저는 {willState.organDonation.selected}</div>
+          <div>저는 {willData.organDonation.selected}</div>
           <br />
-          <div>저는 {willState.inheritance.selected}을 원합니다.</div>
-          <div>{willState.inheritance.note}</div>
+          <div>저는 {willData.inheritance.selected}을 원합니다.</div>
+          <div>{willData.inheritance.note}</div>
           <br />
           <div>
             저는 유언자의 증인 ○○○입니다. 유언자 {userState.username}의 유언이 정확함을 확인합니다. 유언내용은{' '}
-            {willState.funeral.selected}, {willState.grave.selected}, {willState.inheritance.selected}을 원한다는
+            {willData.funeral.selected}, {willData.grave.selected}, {willData.inheritance.selected}을 원한다는
             것입니다.
           </div>
         </div>
-        <PageNavigation nextPath="/writing7" />
+        <PageNavigation onNext={onNext} />
         <div className={styles.date_text}>
           작성일자 서기 {year}년 {month}월 {date}일
         </div>

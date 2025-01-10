@@ -9,7 +9,6 @@ import {
   SearchResultFail,
   SearchResultSuccess,
   SearchComplete,
-  WritingPage,
   Faq,
   Login,
   Join,
@@ -19,6 +18,7 @@ import {
 } from './page';
 import { LoginState } from 'stores/login-store';
 import { Layout } from './Routes/Layout';
+import { WritingPage } from './page/Writing/WritingPage';
 
 const App = () => {
   const isLogin = useRecoilValue(LoginState);
@@ -34,7 +34,8 @@ const App = () => {
           <Route path="/searchResultFail" element={<SearchResultFail />} />
           <Route path="/searchResultSuccess" element={<SearchResultSuccess />} />
           <Route path="/searchComplete" element={<SearchComplete />} />
-          <Route path="/writing" element={isLogin ? <WritingPage /> : <Navigate to="/login" />} />
+          {/* <Route path="/writing" element={isLogin ? <WritingPage /> : <Navigate to="/login" />} /> */}
+          <Route path="/writing" element={<WritingPage />}/>
           <Route path="/faq" element={<Faq />} />
           <Route path="/login" element={isLogin ? <Navigate to="/mypage" /> : <Login />} />
           <Route path="/join" element={isLogin ? <Navigate to="/mypage" /> : <Join />} />

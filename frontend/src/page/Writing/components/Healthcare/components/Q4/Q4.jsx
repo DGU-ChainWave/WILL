@@ -15,19 +15,12 @@ const organDonationOptions = [
   },
 ];
 
-export const Q4 = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Q4 = ({willData, onQClick}) => {
   const [clickedOption, setClickedOption] = useState('');
 
   const handleOptionClick = option => {
     setClickedOption(option); // 클릭된 버튼의 값을 저장
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      organDonation: {
-        ...prevWillState.organDonation,
-        selected: option,
-      },
-    }));
+    onQClick('organDonation', 'selected', option);
   };
 
   return (
@@ -40,7 +33,7 @@ export const Q4 = () => {
             <Option
               key={option.id}
               onClick={() => handleOptionClick(option.title)}
-              active={clickedOption === option.title || willState.organDonation.selected === option.title}>
+              active={clickedOption === option.title || willData.organDonation.selected === option.title}>
               {option.title}
             </Option>
           ))}
@@ -49,9 +42,9 @@ export const Q4 = () => {
         <div className={styles.banner_container}>
           <div className={styles.banner_box}>
             <p className={styles.text}>
-            장기기증에 대한 의향이 있으신가요?
-        <br />
-        장기기증 신청하기 버튼을 통해 신청할 수 있습니다.
+              장기기증에 대한 의향이 있으신가요?
+              <br />
+              장기기증 신청하기 버튼을 통해 신청할 수 있습니다.
             </p>
             <button className={styles.findHealthCenter_button}>장기기증 신청하기 {'>'}</button>
           </div>

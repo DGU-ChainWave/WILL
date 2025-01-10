@@ -15,19 +15,12 @@ const lifeSupportOptions = [
   },
 ];
 
-export const Q3 = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Q3 = ({ willData, onQClick }) => {
   const [selectedOption, setSelectedOption] = useState('');
 
   const handleOptionClick = option => {
     setSelectedOption(option);
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      lifeSupport: {
-        ...prevWillState.lifeSupport,
-        selected: option,
-      },
-    }));
+    onQClick('lifeSupport', 'selected', option);
   };
 
   return (
@@ -40,7 +33,7 @@ export const Q3 = () => {
             <Option
               key={option.id}
               onClick={() => handleOptionClick(option.title)}
-              active={selectedOption === option.title || willState.lifeSupport.selected === option.title}>
+              active={selectedOption === option.title || willData.lifeSupport.selected === option.title}>
               {option.title}
             </Option>
           ))}

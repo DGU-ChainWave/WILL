@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './Intro.module.css';
 import { useNavigate } from 'react-router';
 
-export const Intro = () => {
+export const Intro = ({onNext}) => {
   const [isTooltipVisible, setTooltipVisible] = useState(false);
 
   const handleMouseEnter = () => {
@@ -143,7 +143,7 @@ export const Intro = () => {
       </div>
 
       <div className={styles.blackbuttonContainer}>
-        <button className={styles.blackbutton} onClick={() => navigate('/writing2')}>
+        <button className={styles.blackbutton} onClick={() => onNext()}>
           <p className={styles.text} style={{ color: '#fff', fontSize: '28px' }}>
             유언장 작성하기
           </p>

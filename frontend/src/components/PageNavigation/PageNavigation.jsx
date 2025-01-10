@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './PageNavigation.module.css';
 
-export const PageNavigation = ({ nextPath }) => {
+export const PageNavigation = ({ onNext }) => {
   const navigate = useNavigate();
 
   return (
@@ -16,9 +16,7 @@ export const PageNavigation = ({ nextPath }) => {
       </button>
       <button
         className={styles.next_button}
-        onClick={() => {
-          navigate(nextPath);
-        }}>
+        onClick={() => onNext()}>
         다음으로
       </button>
     </div>

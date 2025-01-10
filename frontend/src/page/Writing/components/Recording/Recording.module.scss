@@ -82,7 +82,7 @@
   margin-top: 30px;
   margin-bottom: 20px;
   background-color: white;
-  background-image: url(../../assets/images/microphone_black.svg);
+  background-image: url(../../../../assets/images/microphone_black.svg);
   background-repeat: no-repeat;
   background-position: center;
   border: 1px solid #cac8ce;
@@ -104,7 +104,7 @@
 
   &.active {
     background-color: #2e2e30;
-    background-image: url(../../assets/images/microphone.svg);
+    background-image: url(../../../../assets/images/microphone.svg);
 
     &::after {
       border: 3.61px solid #fff;

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import styles from './Q2.module.scss';
-import { useRecoilState } from 'recoil';
-import { WillState } from 'stores/will-store';
 
 const graveOptions = [
   {
@@ -42,33 +40,20 @@ const graveOptions = [
   },
 ];
 
-export const Q2 = () => {
-  const [willState, setWillState] = useRecoilState(WillState);
+export const Q2 = ({ willData, onQClick }) => {
   const [clickedOption, setClickedOption] = useState(''); // 클릭된 옵션 상태 추가
   const [comment, setComment] = useState(''); // 희망사항 상태 추가
 
   const handleOptionClick = option => {
     setClickedOption(option); // 클릭된 옵션 업데이트
     // WillState의 funeral 업데이트
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      grave: {
-        ...prevWillState.grave,
-        selected: option,
-      },
-    }));
+    onQClick('grave', 'selected', option);
   };
 
   const handleCommentChange = e => {
     const updatedComment = e.target.value;
     setComment(updatedComment);
-    setWillState(prevWillState => ({
-      ...prevWillState,
-      grave: {
-        ...prevWillState.grave,
-        note: updatedComment,
-      },
-    }));
+    onQClick('grave', 'note', updatedComment);
   };
 
   return (
@@ -81,7 +66,7 @@ export const Q2 = () => {
             <button
               key={option.id}
               className={`${styles.selectBox} ${
-                (clickedOption === option.title || willState.grave.selected === option.title) && styles.clicked
+                (clickedOption === option.title || willData.grave.selected === option.title) && styles.clicked
               }`}
               onClick={() => handleOptionClick(option.title)}>
               <div className={styles.title_text}>{option.title}</div>
@@ -93,7 +78,7 @@ export const Q2 = () => {
         <textarea
           className={styles.hope_container}
           placeholder="희망사항을 남겨주세요"
-          value={comment || willState.grave.note}
+          value={comment || willData.grave.note}
           onChange={handleCommentChange}
         />
       </div>
