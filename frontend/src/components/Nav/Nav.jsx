@@ -99,7 +99,7 @@ export const Nav = () => {
         </p>
         <p
           className={`${styles.text} ${location.includes('/writing') && styles.selected_text}`}
-          onClick={() => navigate('/writing1')}>
+          onClick={() => navigate('/writing')}>
           유언장 작성하기
         </p>
         <p

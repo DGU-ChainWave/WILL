@@ -1,1 +1,0 @@
-export { Writing7 } from './Writing7';

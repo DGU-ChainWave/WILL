@@ -9,15 +9,7 @@ import {
   SearchResultFail,
   SearchResultSuccess,
   SearchComplete,
-  Writing1,
-  Writing2,
-  Writing3,
-  Writing4,
-  Writing5,
-  Writing6,
-  Writing7,
-  Writing8,
-  Writing9,
+  WritingPage,
   Faq,
   Login,
   Join,
@@ -42,15 +34,7 @@ const App = () => {
           <Route path="/searchResultFail" element={<SearchResultFail />} />
           <Route path="/searchResultSuccess" element={<SearchResultSuccess />} />
           <Route path="/searchComplete" element={<SearchComplete />} />
-          <Route path="/writing1" element={isLogin ? <Writing1 /> : <Navigate to="/login" />} />
-          <Route path="/writing2" element={isLogin ? <Writing2 /> : <Navigate to="/login" />} />
-          <Route path="/writing3" element={isLogin ? <Writing3 /> : <Navigate to="/login" />} />
-          <Route path="/writing4" element={isLogin ? <Writing4 /> : <Navigate to="/login" />} />
-          <Route path="/writing5" element={isLogin ? <Writing5 /> : <Navigate to="/login" />} />
-          <Route path="/writing6" element={isLogin ? <Writing6 /> : <Navigate to="/login" />} />
-          <Route path="/writing7" element={isLogin ? <Writing7 /> : <Navigate to="/login" />} />
-          <Route path="/writing8" element={isLogin ? <Writing8 /> : <Navigate to="/login" />} />
-          <Route path="/writing9" element={isLogin ? <Writing9 /> : <Navigate to="/login" />} />
+          <Route path="/writing" element={isLogin ? <WritingPage /> : <Navigate to="/login" />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/login" element={isLogin ? <Navigate to="/mypage" /> : <Login />} />
           <Route path="/join" element={isLogin ? <Navigate to="/mypage" /> : <Join />} />
